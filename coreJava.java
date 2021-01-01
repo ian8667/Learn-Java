@@ -1,7 +1,9 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
-import java.util.*;
-// Hadoop imports
+//import java.time.*;
+import java.time.LocalDate;
+import java.time.Month; // Enum Month
+import java.time.temporal.ChronoUnit;
 /**
  * <p>A file to practice my Java as I go through the book
  * 'Core Java Volume 2 - Advanced Features'.</p>
@@ -39,12 +41,22 @@ import java.util.*;
  * </pre>
  * </blockquote>
  * <p>
- * JDK 12 Documentation
- * https://docs.oracle.com/en/java/javase/12/
- * https://docs.oracle.com/en/java/javase/12/docs/api/index.html
+ *
+ * Which one of these is best to use:
+ * String result = String.format("%032x%n", new BigInteger(1, myBytes));
+ * String md5Result = new BigInteger(1, md5.digest()).toString(16);
+ *
+ * JDK 15 Documentation
+ * https://docs.oracle.com/en/java/javase/15/
+ *
+ * Java Version 15 API docs
+ * https://docs.oracle.com/en/java/javase/15/docs/api/index.html
+ *
+ * Apache Hadoop Main 3.2.1 API
+ * https://hadoop.apache.org/docs/stable/api/index.html
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        3.78 2019-06-05
+ * @version (#)coreJava.java        3.94 2021-01-01T12:49:30
  */
 public class coreJava {
 private byte dummy;
@@ -59,17 +71,33 @@ private byte dummy;
   /**
    * Working test method.
    * Floating point formatting to decimal places: %.2f
-   * A format of %03d will pad, for example, a 5 to 005.
+   * A format of %07d will pad, for example, a 7 to 007.
    * topLevel.setLocationRelativeTo(null);
    */
   public void launchFrame() {
     System.out.printf("Start of test on %tc%n", new java.util.Date());
     // ---------------------------------------------------------------
-List<Integer> mylist = Arrays.asList(2,4,6,8,10,12,14,16);
-mylist.stream().forEach((x) -> {System.out.println(x); } );
+//Java Unzip File Example
+//https://www.journaldev.com/960/java-unzip-file-example
+//Zip Slip Vulnerability (?)
+
+
+//String d1 = "2020-01-28";
+//String d2 = "2020-12-05";
+int yyyy = 2021;
+
+
+LocalDate startdate = LocalDate.of(yyyy, Month.JANUARY, 1);
+LocalDate enddate = LocalDate.of(yyyy, Month.DECEMBER, 31);
+
+long diff = ChronoUnit.DAYS.between(startdate, enddate);
+//System.out.printf("Start date: %s%n", d1);
+//System.out.printf("End date: %s%n", d2);
+System.out.printf("The difference is: %d days%n", (diff + 1));
+
     // ---------------------------------------------------------------
     System.out.printf("End of test on %tc%n", new java.util.Date());
-  }//end of launchFrame
+  } //end of launchFrame
 
   /**
    * main
@@ -81,6 +109,6 @@ mylist.stream().forEach((x) -> {System.out.println(x); } );
          new coreJava();
        }
     });
-  }//end of main
+  } //end of main
 
-}//end of class
+} //end of class
