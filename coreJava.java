@@ -1,12 +1,10 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
 //import java.time.*;
-import java.time.LocalDate;
-import java.time.Month; // Enum Month
-import java.time.temporal.ChronoUnit;
-import java.time.Year;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
+import java.time.Month; // Enum Month
+import java.time.LocalDate;
+
 /**
  * <p>A file to practice my Java as I go through the book
  * 'Core Java Volume 2 - Advanced Features'.</p>
@@ -84,21 +82,16 @@ private byte dummy;
 //https://www.journaldev.com/960/java-unzip-file-example
 //Zip Slip Vulnerability (?)
 
-
-Year myYear = Year.now();
-int yyyy = myYear.getValue();
-int yearLength = myYear.length(); // days
 DateTimeFormatter df =  DateTimeFormatter.ofPattern("EEEE, dd LLLL u");
-System.out.printf("The length of year %d is %d days%n", yyyy, yearLength);
 
+LocalDate testDate = LocalDate.of(2021, Month.MARCH, 6);
+System.out.printf("Starting date is : %s%n", testDate.format(df));
 
-LocalDate startdate = LocalDate.of(yyyy, Month.FEBRUARY, 15);
-LocalDate enddate = LocalDate.of(yyyy, Month.FEBRUARY, 19);
-System.out.printf("Start date used: %s%n", startdate.format(df));
-System.out.printf("End date used: %s%n", enddate.format(df));
+for (int m=1; m<5; m++) {
+    testDate = testDate.plusDays(7);
+    System.out.printf("Test date is now : %s%n", testDate.format(df));
+}
 
-long diff = ChronoUnit.DAYS.between(startdate, enddate);
-System.out.printf("The difference is: %d days%n", (diff + 1));
 
     // ---------------------------------------------------------------
     System.out.printf("End of test on %tc%n", new java.util.Date());
