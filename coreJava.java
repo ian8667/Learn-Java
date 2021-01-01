@@ -4,6 +4,9 @@
 import java.time.LocalDate;
 import java.time.Month; // Enum Month
 import java.time.temporal.ChronoUnit;
+import java.time.Year;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 /**
  * <p>A file to practice my Java as I go through the book
  * 'Core Java Volume 2 - Advanced Features'.</p>
@@ -82,17 +85,19 @@ private byte dummy;
 //Zip Slip Vulnerability (?)
 
 
-//String d1 = "2020-01-28";
-//String d2 = "2020-12-05";
-int yyyy = 2021;
+Year myYear = Year.now();
+int yyyy = myYear.getValue();
+int yearLength = myYear.length(); // days
+DateTimeFormatter df =  DateTimeFormatter.ofPattern("EEEE, dd LLLL u");
+System.out.printf("The length of year %d is %d days%n", yyyy, yearLength);
 
 
-LocalDate startdate = LocalDate.of(yyyy, Month.JANUARY, 1);
-LocalDate enddate = LocalDate.of(yyyy, Month.DECEMBER, 31);
+LocalDate startdate = LocalDate.of(yyyy, Month.FEBRUARY, 15);
+LocalDate enddate = LocalDate.of(yyyy, Month.FEBRUARY, 19);
+System.out.printf("Start date used: %s%n", startdate.format(df));
+System.out.printf("End date used: %s%n", enddate.format(df));
 
 long diff = ChronoUnit.DAYS.between(startdate, enddate);
-//System.out.printf("Start date: %s%n", d1);
-//System.out.printf("End date: %s%n", d2);
 System.out.printf("The difference is: %d days%n", (diff + 1));
 
     // ---------------------------------------------------------------
