@@ -1,9 +1,12 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
 //import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.time.Month; // Enum Month
 import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.function.Consumer;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -53,11 +56,11 @@ import java.time.LocalDate;
  * Java Version 15 API docs
  * https://docs.oracle.com/en/java/javase/15/docs/api/index.html
  *
- * Apache Hadoop Main 3.2.1 API
- * https://hadoop.apache.org/docs/stable/api/index.html
+ * Apache Hadoop Main 3.3.0 API
+ * https://hadoop.apache.org/docs/current/api/
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        3.94 2021-01-01T12:49:30
+ * @version (#)coreJava.java        3.95 2021-01-02T12:51:38
  */
 public class coreJava {
 private byte dummy;
@@ -82,17 +85,29 @@ private byte dummy;
 //https://www.journaldev.com/960/java-unzip-file-example
 //Zip Slip Vulnerability (?)
 
-DateTimeFormatter df =  DateTimeFormatter.ofPattern("EEEE, dd LLLL u");
+Consumer<LocalDate> konsumer = (s) -> System.out.println(s);
 
-LocalDate testDate = LocalDate.of(2021, Month.MARCH, 6);
-System.out.printf("Starting date is : %s%n", testDate.format(df));
+//DateTimeFormatter df = DateTimeFormatter.ofPattern("EEEE, dd LLLL u");
+LocalDate startdate = LocalDate.of(2020, 12, 5);
+LocalDate enddate = LocalDate.of(2020, 12, 31);
+Period periodStep = Period.of(0,0,7); //step in chunks of 7 days
+System.out.println("Approach #1");
 
-for (int m=1; m<5; m++) {
-    testDate = testDate.plusDays(7);
-    System.out.printf("Test date is now : %s%n", testDate.format(df));
-}
+List<LocalDate> listOfDates = startdate
+                              .datesUntil(enddate, periodStep)
+                              .collect(Collectors.toList());
+listOfDates.forEach((s) -> System.out.println(s));
+
+System.out.println("");
+System.out.println("Approach #2");
+startdate.datesUntil(enddate, periodStep)
+         .forEach((s) -> System.out.println(s));
 
 
+System.out.println("");
+System.out.println("Approach #3");
+startdate.datesUntil(enddate, periodStep)
+         .forEach((w) -> konsumer.accept(w));
     // ---------------------------------------------------------------
     System.out.printf("End of test on %tc%n", new java.util.Date());
   } //end of launchFrame
