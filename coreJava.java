@@ -2,11 +2,10 @@
 //package ian;
 //import java.time.*;
 import java.time.LocalDate;
-import java.time.Period;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.function.Consumer;
+import java.time.DayOfWeek;
+import java.time.format.TextStyle;
+import java.util.Locale;
+import java.util.Locale.Builder;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -60,7 +59,7 @@ import java.util.function.Consumer;
  * https://hadoop.apache.org/docs/current/api/
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        3.95 2021-01-02T12:51:38
+ * @version (#)coreJava.java        3.95 2021-01-03T14:57:48
  */
 public class coreJava {
 private byte dummy;
@@ -85,29 +84,26 @@ private byte dummy;
 //https://www.journaldev.com/960/java-unzip-file-example
 //Zip Slip Vulnerability (?)
 
-Consumer<LocalDate> konsumer = (s) -> System.out.println(s);
+// setLanguage("en") gives Wednesday
+// setLanguage("eng") gives Wed
+Locale aLocale = new Builder().setLanguage("en").setRegion("GB").build();
+LocalDate sampleDay;
+DayOfWeek dow;
+String dowtext;
+String withoutLocale;
 
-//DateTimeFormatter df = DateTimeFormatter.ofPattern("EEEE, dd LLLL u");
-LocalDate startdate = LocalDate.of(2020, 12, 5);
-LocalDate enddate = LocalDate.of(2020, 12, 31);
-Period periodStep = Period.of(0,0,7); //step in chunks of 7 days
-System.out.println("Approach #1");
+for (int m = 7; m <= 13; m++) {
+    sampleDay = LocalDate.of(2020, 12, m);
+    dow = sampleDay.getDayOfWeek();
+    dowtext = dow.getDisplayName(TextStyle.FULL, aLocale);
 
-List<LocalDate> listOfDates = startdate
-                              .datesUntil(enddate, periodStep)
-                              .collect(Collectors.toList());
-listOfDates.forEach((s) -> System.out.println(s));
+    System.out.printf("Day of week for %s is %s%n", sampleDay, dowtext);
+    System.out.printf("Integer value for this day of week is: %d%n",dow.getValue());
 
-System.out.println("");
-System.out.println("Approach #2");
-startdate.datesUntil(enddate, periodStep)
-         .forEach((s) -> System.out.println(s));
-
-
-System.out.println("");
-System.out.println("Approach #3");
-startdate.datesUntil(enddate, periodStep)
-         .forEach((w) -> konsumer.accept(w));
+    withoutLocale = sampleDay.getDayOfWeek().toString();
+    System.out.printf("Day of week without locale: %s%n", withoutLocale);
+    System.out.println("");
+}
     // ---------------------------------------------------------------
     System.out.printf("End of test on %tc%n", new java.util.Date());
   } //end of launchFrame
