@@ -2,10 +2,8 @@
 //package ian;
 //import java.time.*;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.DayOfWeek;
-import java.time.format.TextStyle;
-import java.util.Locale;
-import java.util.Locale.Builder;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -59,7 +57,7 @@ import java.util.Locale.Builder;
  * https://hadoop.apache.org/docs/current/api/
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        3.95 2021-01-03T14:57:48
+ * @version (#)coreJava.java        3.96 2021-01-04T15:46:58
  */
 public class coreJava {
 private byte dummy;
@@ -83,27 +81,25 @@ private byte dummy;
 //Java Unzip File Example
 //https://www.journaldev.com/960/java-unzip-file-example
 //Zip Slip Vulnerability (?)
+// See if we find the first Saturday after this date.
+LocalDate tempDate = LocalDate.of(2021, Month.JANUARY, 03);
+// This is the day of the week we're looking for
+final DayOfWeek eow = DayOfWeek.SATURDAY;
+DayOfWeek weekday;
+byte loopCounter = 0;
+System.out.printf("Start date is: %s%n", tempDate);
 
-// setLanguage("en") gives Wednesday
-// setLanguage("eng") gives Wed
-Locale aLocale = new Builder().setLanguage("en").setRegion("GB").build();
-LocalDate sampleDay;
-DayOfWeek dow;
-String dowtext;
-String withoutLocale;
+do {
+    loopCounter++;
+    tempDate = tempDate.plusDays(1);
+System.out.printf("tempdate is now %s%n", tempDate);
+    weekday = tempDate.getDayOfWeek();
+} while (weekday.compareTo(eow) != 0);
 
-for (int m = 7; m <= 13; m++) {
-    sampleDay = LocalDate.of(2020, 12, m);
-    dow = sampleDay.getDayOfWeek();
-    dowtext = dow.getDisplayName(TextStyle.FULL, aLocale);
+System.out.println("");
+System.out.printf("end of loop, loop counter is now %d%n", loopCounter);
+System.out.printf("tempdate is now %s%n", tempDate);
 
-    System.out.printf("Day of week for %s is %s%n", sampleDay, dowtext);
-    System.out.printf("Integer value for this day of week is: %d%n",dow.getValue());
-
-    withoutLocale = sampleDay.getDayOfWeek().toString();
-    System.out.printf("Day of week without locale: %s%n", withoutLocale);
-    System.out.println("");
-}
     // ---------------------------------------------------------------
     System.out.printf("End of test on %tc%n", new java.util.Date());
   } //end of launchFrame
