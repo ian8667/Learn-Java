@@ -1,10 +1,7 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
 //import java.time.*;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.DayOfWeek;
-import java.time.Month;
+import java.util.function.Function;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -82,23 +79,18 @@ private byte dummy;
 //Java Unzip File Example
 //https://www.journaldev.com/960/java-unzip-file-example
 //Zip Slip Vulnerability (?)
-// See if we find the first Saturday after this date.
-//LocalDate tempDate = LocalDate.of(2020, Month.DECEMBER, 30);
-LocalDate tempDate = LocalDate.now();
-// This is the next day of the week we're looking for
-final DayOfWeek eow = DayOfWeek.SATURDAY;
-DayOfWeek weekday;
-System.out.printf("Start date used is: %s%n", tempDate);
 
-do {
-    tempDate = tempDate.plusDays(1);
-    System.out.printf("tempdate is now %s%n", tempDate);
-    weekday = tempDate.getDayOfWeek();
-} while (weekday.compareTo(eow) != 0);
+Function<Integer,String> myfunction = (number) -> {
+//Package java.util.function Interface Function example
 
-System.out.println("");
-System.out.println("end of loop");
-System.out.printf("The next Saturday coming up is %s%n", tempDate);
+if (number % 2 == 0) {
+  return "Number " + number + " is even";
+} else {
+  return "Number " + number + " is odd";
+}
+};
+int num = 22;
+System.out.println(myfunction.apply(num));
 
     // ---------------------------------------------------------------
     System.out.printf("End of test on %tc%n", new java.util.Date());
