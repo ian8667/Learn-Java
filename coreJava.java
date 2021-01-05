@@ -4,6 +4,7 @@
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.DayOfWeek;
+import java.time.Month;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -57,7 +58,7 @@ import java.time.DayOfWeek;
  * https://hadoop.apache.org/docs/current/api/
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        3.96 2021-01-04T15:46:58
+ * @version (#)coreJava.java        3.97 2021-01-05T16:01:02
  */
 public class coreJava {
 private byte dummy;
@@ -82,23 +83,22 @@ private byte dummy;
 //https://www.journaldev.com/960/java-unzip-file-example
 //Zip Slip Vulnerability (?)
 // See if we find the first Saturday after this date.
-LocalDate tempDate = LocalDate.of(2021, Month.JANUARY, 03);
-// This is the day of the week we're looking for
+//LocalDate tempDate = LocalDate.of(2020, Month.DECEMBER, 30);
+LocalDate tempDate = LocalDate.now();
+// This is the next day of the week we're looking for
 final DayOfWeek eow = DayOfWeek.SATURDAY;
 DayOfWeek weekday;
-byte loopCounter = 0;
-System.out.printf("Start date is: %s%n", tempDate);
+System.out.printf("Start date used is: %s%n", tempDate);
 
 do {
-    loopCounter++;
     tempDate = tempDate.plusDays(1);
-System.out.printf("tempdate is now %s%n", tempDate);
+    System.out.printf("tempdate is now %s%n", tempDate);
     weekday = tempDate.getDayOfWeek();
 } while (weekday.compareTo(eow) != 0);
 
 System.out.println("");
-System.out.printf("end of loop, loop counter is now %d%n", loopCounter);
-System.out.printf("tempdate is now %s%n", tempDate);
+System.out.println("end of loop");
+System.out.printf("The next Saturday coming up is %s%n", tempDate);
 
     // ---------------------------------------------------------------
     System.out.printf("End of test on %tc%n", new java.util.Date());
