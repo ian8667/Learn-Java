@@ -80,17 +80,11 @@ private byte dummy;
 //https://www.journaldev.com/960/java-unzip-file-example
 //Zip Slip Vulnerability (?)
 
-Function<Integer,String> myfunction = (number) -> {
-//Package java.util.function Interface Function example
+Function< String, Integer > function3 = (t) -> t.length();
+Function< Integer, Integer > function4 = (number) -> number * 3;
 
-if (number % 2 == 0) {
-  return "Number " + number + " is even";
-} else {
-  return "Number " + number + " is odd";
-}
-};
-int num = 22;
-System.out.println(myfunction.apply(num));
+Integer myint = function3.andThen(function4).apply("Helen");
+System.out.println(myint);
 
     // ---------------------------------------------------------------
     System.out.printf("End of test on %tc%n", new java.util.Date());
