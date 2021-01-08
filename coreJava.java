@@ -2,7 +2,6 @@
 //package ian;
 //import java.time.*;
 import java.util.stream.Stream;
-import java.util.function.Predicate;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -81,11 +80,9 @@ private byte dummy;
 //https://www.journaldev.com/960/java-unzip-file-example
 //Zip Slip Vulnerability (?)
 
-Predicate<Integer> lonum = (w) -> w < 6;
-
-System.out.println("Streams and numbers");
-Stream<Integer> sx = Stream.of(1,2,3,4,5,6,7,8,9);
-sx.filter(lonum).forEach((w) -> System.out.println(w));
+System.out.println("Streams and map");
+Stream<String> sx = Stream.of("the", "quick", "brown", "fox","jumps", "over", "the", "lazy", "dog");
+sx.map(name -> name.toUpperCase()).forEach((w) -> System.out.println(w));
 
     // ---------------------------------------------------------------
     System.out.printf("End of test on %tc%n", new java.util.Date());
