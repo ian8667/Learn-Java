@@ -1,8 +1,8 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
 //import java.time.*;
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
+import java.util.function.Predicate;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -81,28 +81,12 @@ private byte dummy;
 //https://www.journaldev.com/960/java-unzip-file-example
 //Zip Slip Vulnerability (?)
 
-System.out.println("1. Find the first word in our list");
-List<String> wordlist = Arrays.asList("pen", "coin", "desk", "chair", "cup", "tea", "coffee");
-String word = wordlist.stream().findFirst().get();
-System.out.printf("The first word found is %s%n", word);
+Predicate<Integer> lonum = (w) -> w < 6;
 
-System.out.println("");
-System.out.println("2. Count the number of elements in the list");
-long fred = wordlist.stream().count();
-System.out.printf("fred is now %d%n", fred);
+System.out.println("Streams and numbers");
+Stream<Integer> sx = Stream.of(1,2,3,4,5,6,7,8,9);
+sx.filter(lonum).forEach((w) -> System.out.println(w));
 
-System.out.println("");
-System.out.println("3. Count the number of elements in the list the old fashioned way");
-int fred2 = wordlist.size();
-System.out.printf("fred2 is now %d%n", fred2);
-
-System.out.println("");
-System.out.println("4. Print the elements");
-wordlist.stream().forEach((w) -> System.out.println(w));
-
-System.out.println("");
-System.out.println("5. Print the elements in order");
-wordlist.stream().sorted().forEach((w) -> System.out.println(w));
     // ---------------------------------------------------------------
     System.out.printf("End of test on %tc%n", new java.util.Date());
   } //end of launchFrame
