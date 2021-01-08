@@ -1,7 +1,8 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
 //import java.time.*;
-import java.util.function.Function;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -55,7 +56,7 @@ import java.util.function.Function;
  * https://hadoop.apache.org/docs/current/api/
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        3.97 2021-01-05T16:01:02
+ * @version (#)coreJava.java        3.98 2021-01-08T15:15:33
  */
 public class coreJava {
 private byte dummy;
@@ -80,11 +81,20 @@ private byte dummy;
 //https://www.journaldev.com/960/java-unzip-file-example
 //Zip Slip Vulnerability (?)
 
-Function< String, Integer > function3 = (t) -> t.length();
-Function< Integer, Integer > function4 = (number) -> number * 3;
+System.out.println("1. Find the first word in our list");
+List<String> wordlist = Arrays.asList("pen", "coin", "desk", "chair", "cup", "tea", "coffee");
+String word = wordlist.stream().findFirst().get();
+System.out.printf("The first word found is %s%n", word);
 
-Integer myint = function3.andThen(function4).apply("Helen");
-System.out.println(myint);
+System.out.println("");
+System.out.println("2. Count the number of elements in the list");
+long fred = wordlist.stream().count();
+System.out.printf("fred is now %d%n", fred);
+
+System.out.println("");
+System.out.println("3. Count the number of elements in the list the old fashioned way");
+int fred2 = wordlist.size();
+System.out.printf("fred2 is now %d%n", fred2);
 
     // ---------------------------------------------------------------
     System.out.printf("End of test on %tc%n", new java.util.Date());
