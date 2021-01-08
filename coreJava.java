@@ -96,6 +96,13 @@ System.out.println("3. Count the number of elements in the list the old fashione
 int fred2 = wordlist.size();
 System.out.printf("fred2 is now %d%n", fred2);
 
+System.out.println("");
+System.out.println("4. Print the elements");
+wordlist.stream().forEach((w) -> System.out.println(w));
+
+System.out.println("");
+System.out.println("5. Print the elements in order");
+wordlist.stream().sorted().forEach((w) -> System.out.println(w));
     // ---------------------------------------------------------------
     System.out.printf("End of test on %tc%n", new java.util.Date());
   } //end of launchFrame
