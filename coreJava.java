@@ -1,7 +1,10 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
 //import java.time.*;
-import java.util.stream.Stream;
+import java.util.stream.IntStream;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -45,17 +48,27 @@ import java.util.stream.Stream;
  * String result = String.format("%032x%n", new BigInteger(1, myBytes));
  * String md5Result = new BigInteger(1, md5.digest()).toString(16);
  *
+ * Documentation
+ *
  * JDK 15 Documentation
  * https://docs.oracle.com/en/java/javase/15/
  *
  * Java Version 15 API docs
  * https://docs.oracle.com/en/java/javase/15/docs/api/index.html
  *
+ * The Java Tutorials
+ * https://docs.oracle.com/javase/tutorial/
+ *
  * Apache Hadoop Main 3.3.0 API
  * https://hadoop.apache.org/docs/current/api/
  *
+ * Learning
+ *
+ * Java 8 Stream Tutorial
+ * https://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples/
+ *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        3.98 2021-01-08T15:15:33
+ * @version (#)coreJava.java        4.00 2021-01-10T13:25:38
  */
 public class coreJava {
 private byte dummy;
@@ -70,7 +83,7 @@ private byte dummy;
   /**
    * Working test method.
    * Floating point formatting to decimal places: %.2f
-   * A format of %07d will pad, for example, a 7 to 007.
+   * A format of %03d will pad, for example, a 7 to 007.
    * topLevel.setLocationRelativeTo(null);
    */
   public void launchFrame() {
@@ -80,9 +93,31 @@ private byte dummy;
 //https://www.journaldev.com/960/java-unzip-file-example
 //Zip Slip Vulnerability (?)
 
-System.out.println("Streams and map");
-Stream<String> sx = Stream.of("the", "quick", "brown", "fox","jumps", "over", "the", "lazy", "dog");
-sx.map(name -> name.toUpperCase()).forEach((w) -> System.out.println(w));
+// Finding min and max number from a stream of numbers
+List<Integer> numList = List.of(75,81,50,15,11,30,43,22);
+Comparator<Integer> komparator = Comparator.comparing(Integer::intValue);
+
+System.out.println("Sorted output");
+numList.stream().sorted().forEach((w) -> System.out.println(w));
+Optional<Integer> minNumber = numList.stream().min(komparator);
+Optional<Integer> maxNumber = numList.stream().max(komparator);
+minNumber.ifPresent(w -> System.out.printf("Min number: %d%n", w));
+maxNumber.ifPresent(w -> System.out.printf("Max number: %d%n", w));
+
+System.out.println("\nPart two");
+int mySum = numList.stream().mapToInt(Integer::intValue).sum();
+System.out.printf("The sum of all the numbers is: %d%n", mySum);
+int sum99 = numList.stream().reduce(0, Integer::sum); //sums up numbers in the stream
+System.out.printf("sum99 is now: %d%n", sum99);
+
+
+numList.stream().reduce(Integer::min).ifPresent(w -> System.out.println(w));
+numList.stream().reduce(Integer::max).ifPresent(w -> System.out.println(w));
+
+System.out.println("\nCount of items in the list");
+long kount = numList.stream().count();
+System.out.printf("Number of items found: %d%n", kount);
+System.out.printf("The old fashioned count: %d%n", numList.size());
 
     // ---------------------------------------------------------------
     System.out.printf("End of test on %tc%n", new java.util.Date());
