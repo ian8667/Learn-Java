@@ -1,10 +1,11 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
 //import java.time.*;
-import java.util.stream.IntStream;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.net.Socket;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.io.InputStreamReader;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -68,7 +69,7 @@ import java.util.Optional;
  * https://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples/
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.00 2021-01-10T13:25:38
+ * @version (#)coreJava.java        4.01 2021-02-08T00:33:46
  */
 public class coreJava {
 private byte dummy;
@@ -93,31 +94,57 @@ private byte dummy;
 //https://www.journaldev.com/960/java-unzip-file-example
 //Zip Slip Vulnerability (?)
 
-// Finding min and max number from a stream of numbers
-List<Integer> numList = List.of(75,81,50,15,11,30,43,22);
-Comparator<Integer> komparator = Comparator.comparing(Integer::intValue);
+// Daytime Protocol (RFC-867) nist
+// https://www.nist.gov/pml/time-and-frequency-division/time-distribution/internet-time-service-its#:~:text=The%20NIST%20servers%20listen%20for,a%20resolution%20of%20200%20ps.
 
-System.out.println("Sorted output");
-numList.stream().sorted().forEach((w) -> System.out.println(w));
-Optional<Integer> minNumber = numList.stream().min(komparator);
-Optional<Integer> maxNumber = numList.stream().max(komparator);
-minNumber.ifPresent(w -> System.out.printf("Min number: %d%n", w));
-maxNumber.ifPresent(w -> System.out.printf("Max number: %d%n", w));
+//From: Trevor Milburn <trevorjmilburn@hotmail.co.uk>
+/*
+Do some uuid work
+A Universally Unique IDentifier (UUID) URN Namespace
+https://tools.ietf.org/html/rfc4122
 
-System.out.println("\nPart two");
-int mySum = numList.stream().mapToInt(Integer::intValue).sum();
-System.out.printf("The sum of all the numbers is: %d%n", mySum);
-int sum99 = numList.stream().reduce(0, Integer::sum); //sums up numbers in the stream
-System.out.printf("sum99 is now: %d%n", sum99);
+See also:
+Generate a UUID compliant with RFC 4122
+https://www.cryptosys.net/pki/uuid-rfc4122.html
+https://betterexplained.com/articles/the-quick-guide-to-guids/
+
+import java.util.UUID;
+UUID myuid = UUID.randomUUID();
+
+MessageDigest salt = MessageDigest.getInstance("SHA-256");
+salt.update(UUID.randomUUID().toString().getBytes("UTF-8"));
+String digest = bytesToHex(salt.digest());
+*/
 
 
-numList.stream().reduce(Integer::min).ifPresent(w -> System.out.println(w));
-numList.stream().reduce(Integer::max).ifPresent(w -> System.out.println(w));
+//Convert this to PowerShell
+Charset ascii = Charset.forName("US-ASCII");
+//String hostname = "3.se.pool.ntp.org";
+String hostname = "time.nist.gov";
+int port = 13;
+int byteRead = 0;
 
-System.out.println("\nCount of items in the list");
-long kount = numList.stream().count();
-System.out.printf("Number of items found: %d%n", kount);
-System.out.printf("The old fashioned count: %d%n", numList.size());
+try (Socket mysocket = new Socket(hostname, port);
+     InputStreamReader reader = new InputStreamReader(mysocket.getInputStream(),ascii);)
+{
+// Make sure we don't query the time server too often.
+System.out.println("Sleeping for 5 seconds");
+Thread.sleep(5000);
+
+
+System.out.printf("Trying to get Timestamp\n");
+byteRead = reader.read();
+while (byteRead != -1) {
+    System.out.print((char)byteRead);
+    byteRead = reader.read();
+
+} //end while loop
+
+} catch (IOException e) {
+         e.printStackTrace();
+} catch (InterruptedException e2) {
+      System.err.println("sleep Thread is interrupted");
+}
 
     // ---------------------------------------------------------------
     System.out.printf("End of test on %tc%n", new java.util.Date());
