@@ -1,11 +1,13 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
 //import java.time.*;
-import java.net.Socket;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.security.DigestInputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.io.InputStreamReader;
+import java.math.BigInteger;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -46,16 +48,16 @@ import java.io.InputStreamReader;
  * <p>
  *
  * Which one of these is best to use:
- * String result = String.format("%032x%n", new BigInteger(1, myBytes));
+ * String md5Result = String.format("%032x%n", new BigInteger(1, myBytes));
  * String md5Result = new BigInteger(1, md5.digest()).toString(16);
  *
  * Documentation
  *
- * JDK 15 Documentation
- * https://docs.oracle.com/en/java/javase/15/
+ * JDK 16 Documentation
+ * https://docs.oracle.com/en/java/javase/16/
  *
- * Java Version 15 API docs
- * https://docs.oracle.com/en/java/javase/15/docs/api/index.html
+ * Java Version 16 API docs
+ * https://docs.oracle.com/en/java/javase/16/docs/api/index.html
  *
  * The Java Tutorials
  * https://docs.oracle.com/javase/tutorial/
@@ -69,7 +71,7 @@ import java.io.InputStreamReader;
  * https://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples/
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.01 2021-02-08T00:33:46
+ * @version (#)coreJava.java        4.09 2021-05-15T16:18:37
  */
 public class coreJava {
 private byte dummy;
@@ -90,60 +92,66 @@ private byte dummy;
   public void launchFrame() {
     System.out.printf("Start of test on %tc%n", new java.util.Date());
     // ---------------------------------------------------------------
-//Java Unzip File Example
-//https://www.journaldev.com/960/java-unzip-file-example
-//Zip Slip Vulnerability (?)
 
-// Daytime Protocol (RFC-867) nist
-// https://www.nist.gov/pml/time-and-frequency-division/time-distribution/internet-time-service-its#:~:text=The%20NIST%20servers%20listen%20for,a%20resolution%20of%20200%20ps.
+//https://www.programcreek.com/java-api-examples/?api=java.security.DigestInputStream
+MessageDigest md = null;
+try {
+    md = MessageDigest.getInstance("MD5");
+} catch (NoSuchAlgorithmException e1) {
+    e1.printStackTrace();
+}
 
-//From: Trevor Milburn <trevorjmilburn@hotmail.co.uk>
-/*
-Do some uuid work
-A Universally Unique IDentifier (UUID) URN Namespace
-https://tools.ietf.org/html/rfc4122
+byte[] databuffer = new byte[1024 * 8];
+final String inputfile = "C:\\Gash\\ian.ian";
+System.out.printf("Hashing file %s%n", inputfile);
+int loopPasses = 0;
+final int EOF = -1;
+try (InputStream istream = new FileInputStream(inputfile);
+     DigestInputStream dis = new DigestInputStream(istream, md)) {
 
-See also:
-Generate a UUID compliant with RFC 4122
-https://www.cryptosys.net/pki/uuid-rfc4122.html
-https://betterexplained.com/articles/the-quick-guide-to-guids/
-
-import java.util.UUID;
-UUID myuid = UUID.randomUUID();
-
-MessageDigest salt = MessageDigest.getInstance("SHA-256");
-salt.update(UUID.randomUUID().toString().getBytes("UTF-8"));
-String digest = bytesToHex(salt.digest());
-*/
-
-
-//Convert this to PowerShell
-Charset ascii = Charset.forName("US-ASCII");
-//String hostname = "3.se.pool.ntp.org";
-String hostname = "time.nist.gov";
-int port = 13;
-int byteRead = 0;
-
-try (Socket mysocket = new Socket(hostname, port);
-     InputStreamReader reader = new InputStreamReader(mysocket.getInputStream(),ascii);)
-{
-// Make sure we don't query the time server too often.
-System.out.println("Sleeping for 5 seconds");
-Thread.sleep(5000);
+    dis.on(true);
+    while (dis.read(databuffer) != EOF) {
+    	//Although this seems like an empty loop, the work is
+      //actually being done in the 'condition' of the loop.
+      //The action of reading bytes into the array updates
+      //the message digest. The whole input stream is read
+      //into the array. buffer by buffer. until the end of
+      //stream (EOF) is reached.
+      loopPasses++;
+    }
 
 
-System.out.printf("Trying to get Timestamp\n");
-byteRead = reader.read();
-while (byteRead != -1) {
-    System.out.print((char)byteRead);
-    byteRead = reader.read();
+//Part one
+byte[] rawbuffer = md.digest();
+System.out.println("trying to show the result with BigInteger");
+BigInteger bigInt = new BigInteger(1, rawbuffer);
+StringBuilder sb = new StringBuilder(bigInt.toString(16).toUpperCase());
+while (sb.length() < 32 ) {
+    //ensure the digest really is 32 bytes in length
+    sb.insert(0, '0');
+}
+System.out.printf("StringBuilder(1) is now: %s%n", sb.toString());
 
-} //end while loop
 
-} catch (IOException e) {
-         e.printStackTrace();
-} catch (InterruptedException e2) {
-      System.err.println("sleep Thread is interrupted");
+//Part two
+// Iterating through each byte in the array
+System.out.println("looping through the buffer array");
+StringBuilder sb2 = new StringBuilder(32);
+for (byte i : rawbuffer) {
+    sb2.append(String.format("%02X", i));
+}
+while (sb2.length() < 32 ) {
+    //ensure the digest really is 32 bytes in length
+    sb2.insert(0, '0');
+}
+System.out.println("");
+System.out.printf("StringBuilder(2) is now: %s%n", sb2.toString());
+System.out.printf("loopPasses is now: %s%n", loopPasses);
+
+
+     } catch (IOException e1) {
+    e1.printStackTrace();
+
 }
 
     // ---------------------------------------------------------------
