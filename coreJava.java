@@ -1,13 +1,13 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
-//import java.time.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.io.InputStream;
-import java.io.FileInputStream;
-import java.security.DigestInputStream;
-import java.io.IOException;
-import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.DayOfWeek;
+import java.time.YearMonth;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.util.stream.IntStream;
+import java.util.function.Consumer;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -51,13 +51,13 @@ import java.math.BigInteger;
  * String md5Result = String.format("%032x%n", new BigInteger(1, myBytes));
  * String md5Result = new BigInteger(1, md5.digest()).toString(16);
  *
- * Documentation
+ * Documentation:
  *
- * JDK 16 Documentation
- * https://docs.oracle.com/en/java/javase/16/
+ * JDK 17 Documentation
+ * https://docs.oracle.com/en/java/javase/17/
  *
- * Java Version 16 API docs
- * https://docs.oracle.com/en/java/javase/16/docs/api/index.html
+ * Java SE Version 17 API docs
+ * https://docs.oracle.com/en/java/javase/17/docs/api/index.html
  *
  * The Java Tutorials
  * https://docs.oracle.com/javase/tutorial/
@@ -71,7 +71,7 @@ import java.math.BigInteger;
  * https://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples/
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.09 2021-05-15T16:18:37
+ * @version (#)coreJava.java        4.13 2021-12-03T11:04:04
  */
 public class coreJava {
 private byte dummy;
@@ -83,91 +83,69 @@ private byte dummy;
     launchFrame();
   }//end of constructor
 
-  /**
-   * Working test method.
-   * Floating point formatting to decimal places: %.2f
-   * A format of %03d will pad, for example, a 7 to 007.
-   * topLevel.setLocationRelativeTo(null);
-   */
-  public void launchFrame() {
-    System.out.printf("Start of test on %tc%n", new java.util.Date());
-    // ---------------------------------------------------------------
+  private String formatTrevithickDate(LocalDate reqDate) {
+   String tdate = String.format("Trevithick day for %d is %s",
+        reqDate.getYear(),
+        reqDate.format(DateTimeFormatter.ofPattern("EEEE, MMM dd")));
 
-//https://www.programcreek.com/java-api-examples/?api=java.security.DigestInputStream
-MessageDigest md = null;
-try {
-    md = MessageDigest.getInstance("MD5");
-} catch (NoSuchAlgorithmException e1) {
-    e1.printStackTrace();
-}
+   return tdate;
+  }
+    /**
+     * Working test method.
+     * Floating point formatting to decimal places: %.2f
+     * A format of %03d will pad, for example, a 7 to 007.
+     * topLevel.setLocationRelativeTo(null);
+     */
+    public void launchFrame() {
+      System.out.printf("Start of test on %tc%n", new java.util.Date());
+      // ---------------------------------------------------------------
 
-byte[] databuffer = new byte[1024 * 8];
-final String inputfile = "C:\\Gash\\ian.ian";
-System.out.printf("Hashing file %s%n", inputfile);
-int loopPasses = 0;
-final int EOF = -1;
-try (InputStream istream = new FileInputStream(inputfile);
-     DigestInputStream dis = new DigestInputStream(istream, md)) {
+  // long diff = ChronoUnit.DAYS.between (modifiedJulianEpoch , today);
 
-    dis.on(true);
-    while (dis.read(databuffer) != EOF) {
-    	//Although this seems like an empty loop, the work is
-      //actually being done in the 'condition' of the loop.
-      //The action of reading bytes into the array updates
-      //the message digest. The whole input stream is read
-      //into the array. buffer by buffer. until the end of
-      //stream (EOF) is reached.
-      loopPasses++;
+  Consumer<Integer> myConsumer = new Consumer<Integer>() {
+    @Override
+    public void accept(Integer year) {
+      // Get a LocalDate object for the last day of April
+      // for the year in question.
+      LocalDate locdate = YearMonth.of(year, Month.APRIL).atEndOfMonth();
+
+      // Get the last Saturday in April for the year in question.
+      LocalDate lastSaturday = locdate.with(TemporalAdjusters.lastInMonth(DayOfWeek.SATURDAY));
+
+      // Format a string object to present this information.
+      String trevDate = formatTrevithickDate(lastSaturday);
+      System.out.println(trevDate);
+
     }
 
+  }; //end Consumer<Integer>
 
-//Part one
-byte[] rawbuffer = md.digest();
-System.out.println("trying to show the result with BigInteger");
-BigInteger bigInt = new BigInteger(1, rawbuffer);
-StringBuilder sb = new StringBuilder(bigInt.toString(16).toUpperCase());
-while (sb.length() < 32 ) {
-    //ensure the digest really is 32 bytes in length
-    sb.insert(0, '0');
-}
-System.out.printf("StringBuilder(1) is now: %s%n", sb.toString());
+  final LocalDate today = LocalDate.now();
+  final int currentyear = today.getYear();
+  final int endyear = currentyear + 5;
+  LocalDate locdate = null;
+  String trevDate = null;
+  LocalDate lastSaturday = null;
 
+  System.out.printf("The current date is now: %s%n", today.toString());
 
-//Part two
-// Iterating through each byte in the array
-System.out.println("looping through the buffer array");
-StringBuilder sb2 = new StringBuilder(32);
-for (byte i : rawbuffer) {
-    sb2.append(String.format("%02X", i));
-}
-while (sb2.length() < 32 ) {
-    //ensure the digest really is 32 bytes in length
-    sb2.insert(0, '0');
-}
-System.out.println("");
-System.out.printf("StringBuilder(2) is now: %s%n", sb2.toString());
-System.out.printf("loopPasses is now: %s%n", loopPasses);
+  // The number of Trevithick Day dates (1 per year) to list.
+  final int numYears = 4;
+  IntStream.rangeClosed(currentyear, (currentyear + numYears)).forEach((yy) -> myConsumer.accept(yy));
+      // ---------------------------------------------------------------
+      System.out.printf("End of test on %tc%n", new java.util.Date());
+    } //end of launchFrame
 
+    /**
+     * main
+     * @param args
+     */
+    public static void main(String[] args) {
+      javax.swing.SwingUtilities.invokeLater(new Runnable() {
+         public void run() {
+           new coreJava();
+         }
+      });
+    } //end of main
 
-     } catch (IOException e1) {
-    e1.printStackTrace();
-
-}
-
-    // ---------------------------------------------------------------
-    System.out.printf("End of test on %tc%n", new java.util.Date());
-  } //end of launchFrame
-
-  /**
-   * main
-   * @param args
-   */
-  public static void main(String[] args) {
-    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-       public void run() {
-         new coreJava();
-       }
-    });
-  } //end of main
-
-} //end of class
+  } //end of class
