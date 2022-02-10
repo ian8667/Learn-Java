@@ -1,13 +1,11 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
-import java.time.LocalDate;
-import java.time.DayOfWeek;
-import java.time.YearMonth;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAdjusters;
-import java.util.stream.IntStream;
+import java.io.BufferedReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Stream;
 import java.util.function.Consumer;
+import java.io.IOException;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -70,8 +68,14 @@ import java.util.function.Consumer;
  * Java 8 Stream Tutorial
  * https://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples/
  *
+ * Java Magazine:
+ * Modern file input/output with Java Path API and Files helper methods
+ * https://blogs.oracle.com/javamagazine/post/path-files-input-output
+ * Modern file input/output with Java: Let’s get practical
+ * https://blogs.oracle.com/javamagazine/post/java-path-nio2-directory-extensions-zip
+ *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.13 2021-12-03T11:04:04
+ * @version (#)coreJava.java        4.15 2022-02-10T17:53:05
  */
 public class coreJava {
 private byte dummy;
@@ -83,13 +87,6 @@ private byte dummy;
     launchFrame();
   }//end of constructor
 
-  private String formatTrevithickDate(LocalDate reqDate) {
-   String tdate = String.format("Trevithick day for %d is %s",
-        reqDate.getYear(),
-        reqDate.format(DateTimeFormatter.ofPattern("EEEE, MMM dd")));
-
-   return tdate;
-  }
     /**
      * Working test method.
      * Floating point formatting to decimal places: %.2f
@@ -99,39 +96,29 @@ private byte dummy;
     public void launchFrame() {
       System.out.printf("Start of test on %tc%n", new java.util.Date());
       // ---------------------------------------------------------------
-
-  // long diff = ChronoUnit.DAYS.between (modifiedJulianEpoch , today);
-
-  Consumer<Integer> myConsumer = new Consumer<Integer>() {
+Consumer<String> myConsumer = new Consumer<String>() {
     @Override
-    public void accept(Integer year) {
-      // Get a LocalDate object for the last day of April
-      // for the year in question.
-      LocalDate locdate = YearMonth.of(year, Month.APRIL).atEndOfMonth();
+    public void accept(String line) {
 
-      // Get the last Saturday in April for the year in question.
-      LocalDate lastSaturday = locdate.with(TemporalAdjusters.lastInMonth(DayOfWeek.SATURDAY));
-
-      // Format a string object to present this information.
-      String trevDate = formatTrevithickDate(lastSaturday);
-      System.out.println(trevDate);
+    System.out.println(line);
 
     }
 
-  }; //end Consumer<Integer>
+}; //end myConsumer
 
-  final LocalDate today = LocalDate.now();
-  final int currentyear = today.getYear();
-  final int endyear = currentyear + 5;
-  LocalDate locdate = null;
-  String trevDate = null;
-  LocalDate lastSaturday = null;
+Consumer<String> konsumer = (str) -> System.out.println(str);
+//konsumer.accept();
+Path filename = Path.of("C:\\Gash\\ian.ian");
+try (BufferedReader br = Files.newBufferedReader(filename);
+     Stream<String> mystream = br.lines(); ) {
 
-  System.out.printf("The current date is now: %s%n", today.toString());
+//mystream.forEach(System.out::println);
+mystream.forEach(konsumer);
+} catch (IOException e) {
+  System.err.println("IO type error");
+  e.printStackTrace();
+}
 
-  // The number of Trevithick Day dates (1 per year) to list.
-  final int numYears = 4;
-  IntStream.rangeClosed(currentyear, (currentyear + numYears)).forEach((yy) -> myConsumer.accept(yy));
       // ---------------------------------------------------------------
       System.out.printf("End of test on %tc%n", new java.util.Date());
     } //end of launchFrame
