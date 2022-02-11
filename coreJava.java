@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 import java.util.function.Consumer;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -75,7 +76,7 @@ import java.io.IOException;
  * https://blogs.oracle.com/javamagazine/post/java-path-nio2-directory-extensions-zip
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.15 2022-02-10T17:53:05
+ * @version (#)coreJava.java        4.16 2022-02-11T18:12:06
  */
 public class coreJava {
 private byte dummy;
@@ -96,28 +97,33 @@ private byte dummy;
     public void launchFrame() {
       System.out.printf("Start of test on %tc%n", new java.util.Date());
       // ---------------------------------------------------------------
-Consumer<String> myConsumer = new Consumer<String>() {
+// Consumer example 1
+Consumer<Path> printit = new Consumer<Path>() {
     @Override
-    public void accept(String line) {
+    public void accept(Path dd) {
 
-    System.out.println(line);
+      //dd = dd.toUpperCase();
+      System.out.println(dd);
 
     }
 
-}; //end myConsumer
+}; //end printit
+// Consumer example 2
+Consumer<Path> konsumer = (str) -> System.out.println(str);
 
-Consumer<String> konsumer = (str) -> System.out.println(str);
-//konsumer.accept();
-Path filename = Path.of("C:\\Gash\\ian.ian");
-try (BufferedReader br = Files.newBufferedReader(filename);
-     Stream<String> mystream = br.lines(); ) {
+// List the files in this directory
+Path dirname = Path.of("C:\\Gash");
+System.out.printf("Listing files in directory: %s%n%n", dirname.toString());
+    try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(dirname)) {
 
-//mystream.forEach(System.out::println);
-mystream.forEach(konsumer);
-} catch (IOException e) {
-  System.err.println("IO type error");
-  e.printStackTrace();
-}
+//dirStream.forEach(printit);
+dirStream.forEach(konsumer);
+//dirStream.forEach((obj) -> System.out.println(obj));
+
+    } catch (IOException e2) {
+      System.err.println("IO problem of some kind");
+      e2.printStackTrace();
+    } //end try/catch block
 
       // ---------------------------------------------------------------
       System.out.printf("End of test on %tc%n", new java.util.Date());
