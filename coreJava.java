@@ -1,12 +1,11 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
-import java.io.BufferedReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 import java.util.function.Consumer;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
+import java.nio.charset.Charset;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -76,7 +75,7 @@ import java.nio.file.DirectoryStream;
  * https://blogs.oracle.com/javamagazine/post/java-path-nio2-directory-extensions-zip
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.16 2022-02-11T18:12:06
+ * @version (#)coreJava.java        4.17 2022-02-11T23:57:53
  */
 public class coreJava {
 private byte dummy;
@@ -112,18 +111,22 @@ Consumer<Path> printit = new Consumer<Path>() {
 Consumer<Path> konsumer = (str) -> System.out.println(str);
 
 // List the files in this directory
-Path dirname = Path.of("C:\\Gash");
-System.out.printf("Listing files in directory: %s%n%n", dirname.toString());
-    try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(dirname)) {
+Path myfile = Path.of("C:\\Gash\\ian.ian");
+Charset myascii = Charset.forName("US-ASCII");
 
-//dirStream.forEach(printit);
-dirStream.forEach(konsumer);
-//dirStream.forEach((obj) -> System.out.println(obj));
+    try {
 
-    } catch (IOException e2) {
+String cont = Files.readString(myfile, myascii);
+System.out.println(cont);
+// In my simple test, the length of the string was the same
+// length of the file size (in bytes).
+System.out.printf("String %s has length %d%n", "cont", cont.length());
+
+    } catch (IOException e1) {
       System.err.println("IO problem of some kind");
-      e2.printStackTrace();
+      e1.printStackTrace();
     } //end try/catch block
+
 
       // ---------------------------------------------------------------
       System.out.printf("End of test on %tc%n", new java.util.Date());
