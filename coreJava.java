@@ -4,6 +4,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.stream.Stream;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -73,7 +75,7 @@ import java.io.IOException;
  * https://blogs.oracle.com/javamagazine/post/java-path-nio2-directory-extensions-zip
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.18 2022-02-12T21:56:11
+ * @version (#)coreJava.java        4.19 2022-02-12T23:19:16
  */
 public class coreJava {
 private byte dummy;
@@ -95,9 +97,9 @@ private byte dummy;
       System.out.printf("Start of test on %tc%n", new java.util.Date());
       // ---------------------------------------------------------------
 // Consumer example 1
-Consumer<Path> printit = new Consumer<Path>() {
+Consumer<String> printit = new Consumer<String>() {
     @Override
-    public void accept(Path dd) {
+    public void accept(String dd) {
 
       //dd = dd.toUpperCase();
       System.out.println(dd);
@@ -106,26 +108,17 @@ Consumer<Path> printit = new Consumer<Path>() {
 
 }; //end printit
 // Consumer example 2
-Consumer<Path> konsumer = (str) -> System.out.println(str);
+Consumer<String> konsumer = (str) -> System.out.println(str);
 
 final String basepath = "C:\\Gash";
 Path myfile1 = Path.of(basepath, "ian.ian");
-Path myfile2 = Path.of(basepath, "x.x");
+Charset myascii = Charset.forName("US-ASCII");
 
-    try {
+String msg = "hello world";
+konsumer.accept(msg);
 
-// if you are comparing two completely different files, you’ll
-// get this as console output: the very first byte already
-// didn’t match, hence the mismatch is position zero.
-
-long diffs = Files.mismatch(myfile1,myfile2);
-System.out.printf("diffs is now: %d%n", diffs);
-
-    } catch (IOException e1) {
-      System.err.println("IO problem of some kind");
-      e1.printStackTrace();
-    } //end try/catch block
-
+msg = "hello Consumer printit";
+printit.accept(msg);
 
       // ---------------------------------------------------------------
       System.out.printf("End of test on %tc%n", new java.util.Date());
