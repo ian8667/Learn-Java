@@ -2,10 +2,8 @@
 //package ian;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.stream.Stream;
 import java.util.function.Consumer;
 import java.io.IOException;
-import java.nio.charset.Charset;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -75,7 +73,7 @@ import java.nio.charset.Charset;
  * https://blogs.oracle.com/javamagazine/post/java-path-nio2-directory-extensions-zip
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.17 2022-02-11T23:57:53
+ * @version (#)coreJava.java        4.18 2022-02-12T21:56:11
  */
 public class coreJava {
 private byte dummy;
@@ -110,17 +108,18 @@ Consumer<Path> printit = new Consumer<Path>() {
 // Consumer example 2
 Consumer<Path> konsumer = (str) -> System.out.println(str);
 
-// List the files in this directory
-Path myfile = Path.of("C:\\Gash\\ian.ian");
-Charset myascii = Charset.forName("US-ASCII");
+final String basepath = "C:\\Gash";
+Path myfile1 = Path.of(basepath, "ian.ian");
+Path myfile2 = Path.of(basepath, "x.x");
 
     try {
 
-String cont = Files.readString(myfile, myascii);
-System.out.println(cont);
-// In my simple test, the length of the string was the same
-// length of the file size (in bytes).
-System.out.printf("String %s has length %d%n", "cont", cont.length());
+// if you are comparing two completely different files, you’ll
+// get this as console output: the very first byte already
+// didn’t match, hence the mismatch is position zero.
+
+long diffs = Files.mismatch(myfile1,myfile2);
+System.out.printf("diffs is now: %d%n", diffs);
 
     } catch (IOException e1) {
       System.err.println("IO problem of some kind");
