@@ -5,7 +5,9 @@ import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.stream.Stream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -75,7 +77,7 @@ import java.util.stream.Stream;
  * https://blogs.oracle.com/javamagazine/post/java-path-nio2-directory-extensions-zip
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.19 2022-02-12T23:19:16
+ * @version (#)coreJava.java        4.20 2022-02-25T15:57:26
  */
 public class coreJava {
 private byte dummy;
@@ -110,16 +112,42 @@ Consumer<String> printit = new Consumer<String>() {
 // Consumer example 2
 Consumer<String> konsumer = (str) -> System.out.println(str);
 
-final String basepath = "C:\\Gash";
-Path myfile1 = Path.of(basepath, "ian.ian");
+final String BASEPATH = "C:\\Gash";
+final Path myfile1 = Path.of(BASEPATH, "gashinput.txt");
+final Path myfile2 = Path.of(BASEPATH, "gashinput002.txt");
 Charset myascii = Charset.forName("US-ASCII");
 
 String msg = "hello world";
 konsumer.accept(msg);
 
-msg = "hello Consumer printit";
+msg = "trying to copy files";
 printit.accept(msg);
 
+
+try (FileChannel inchan = new FileInputStream(myfile1.toString()).getChannel();
+     FileChannel outchan = new FileOutputStream(myfile2.toString()).getChannel() )
+{
+  // The position within the file at which the transfer is to begin.
+  // This variable is also the number of bytes, possibly zero, that
+  // were actually transferred. So we use this variable to help us
+  // step (move) through the channel transferring bytes as we go along
+  long filepos = 0L;
+
+  // The maximum number of bytes to be transferred. I don't know
+  // how to calculate the optimum buffer size so this is just a
+  // guess
+  final long buffersize = (1024 * 8);
+
+  // Input channel size. We could also use "Files.size(path_to_object)"
+  final long filesize = inchan.size();
+
+  while (filepos < filesize) {
+      filepos += inchan.transferTo(filepos, buffersize, outchan);
+  }
+
+} catch (IOException e) {
+   e.printStackTrace();
+}
       // ---------------------------------------------------------------
       System.out.printf("End of test on %tc%n", new java.util.Date());
     } //end of launchFrame
