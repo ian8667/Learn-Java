@@ -5,9 +5,9 @@ import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.nio.channels.FileChannel;
+import java.util.function.Function;
+import java.util.stream.Stream;
+import java.nio.file.Paths;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -53,11 +53,11 @@ import java.nio.channels.FileChannel;
  *
  * Documentation:
  *
- * JDK 17 Documentation
- * https://docs.oracle.com/en/java/javase/17/
+ * JDK 19 Documentation
+ * https://docs.oracle.com/en/java/javase/19/
  *
- * Java SE Version 17 API docs
- * https://docs.oracle.com/en/java/javase/17/docs/api/index.html
+ * Java SE Version 19 API docs
+ * https://docs.oracle.com/en/java/javase/19/docs/api/index.html
  *
  * The Java Tutorials
  * https://docs.oracle.com/javase/tutorial/
@@ -73,11 +73,14 @@ import java.nio.channels.FileChannel;
  * Java Magazine:
  * Modern file input/output with Java Path API and Files helper methods
  * https://blogs.oracle.com/javamagazine/post/path-files-input-output
- * Modern file input/output with Java: Let’s get practical
+ * Modern file input/output with Java: Let's get practical
  * https://blogs.oracle.com/javamagazine/post/java-path-nio2-directory-extensions-zip
  *
+ * Java Tutorial
+ * https://www.w3schools.com/java/default.asp
+ *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.20 2022-02-25T15:57:26
+ * @version (#)coreJava.java        4.23 2022-10-10T19:21:03
  */
 public class coreJava {
 private byte dummy;
@@ -112,41 +115,20 @@ Consumer<String> printit = new Consumer<String>() {
 // Consumer example 2
 Consumer<String> konsumer = (str) -> System.out.println(str);
 
-final String BASEPATH = "C:\\Gash";
-final Path myfile1 = Path.of(BASEPATH, "gashinput.txt");
-final Path myfile2 = Path.of(BASEPATH, "gashinput002.txt");
-Charset myascii = Charset.forName("US-ASCII");
-
-String msg = "hello world";
+String msg = "hello world from konsumer";
 konsumer.accept(msg);
 
-msg = "trying to copy files";
-printit.accept(msg);
+Function<Integer, Integer> twice = a -> a * 2;
+System.out.println(twice.apply(3));
 
+String src = "C:\\gash\\gashfile.txt";
+int skiplines = 8;
 
-try (FileChannel inchan = new FileInputStream(myfile1.toString()).getChannel();
-     FileChannel outchan = new FileOutputStream(myfile2.toString()).getChannel() )
-{
-  // The position within the file at which the transfer is to begin.
-  // This variable is also the number of bytes, possibly zero, that
-  // were actually transferred. So we use this variable to help us
-  // step (move) through the channel transferring bytes as we go along
-  long filepos = 0L;
-
-  // The maximum number of bytes to be transferred. I don't know
-  // how to calculate the optimum buffer size so this is just a
-  // guess
-  final long buffersize = (1024 * 8);
-
-  // Input channel size. We could also use "Files.size(path_to_object)"
-  final long filesize = inchan.size();
-
-  while (filepos < filesize) {
-      filepos += inchan.transferTo(filepos, buffersize, outchan);
-  }
+try (Stream<String> klines = Files.lines(Paths.get(src))) {
+	klines.skip(skiplines).forEach(System.out::println);
 
 } catch (IOException e) {
-   e.printStackTrace();
+	 e.printStackTrace();
 }
       // ---------------------------------------------------------------
       System.out.printf("End of test on %tc%n", new java.util.Date());
