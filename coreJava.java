@@ -1,13 +1,6 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.function.Consumer;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.function.Function;
-import java.util.stream.Stream;
-import java.nio.file.Paths;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -80,7 +73,7 @@ import java.nio.file.Paths;
  * https://www.w3schools.com/java/default.asp
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.23 2022-10-10T19:21:03
+ * @version (#)coreJava.java        4.24 2022-10-11T18:57:09
  */
 public class coreJava {
 private byte dummy;
@@ -112,24 +105,16 @@ Consumer<String> printit = new Consumer<String>() {
     }
 
 }; //end printit
+//Usage:
+String msg = "hello world from Consumer<String> printit";
+printit.accept(msg);
+
+
 // Consumer example 2
 Consumer<String> konsumer = (str) -> System.out.println(str);
 
-String msg = "hello world from konsumer";
+msg = "hello world from Consumer<String> konsumer";
 konsumer.accept(msg);
-
-Function<Integer, Integer> twice = a -> a * 2;
-System.out.println(twice.apply(3));
-
-String src = "C:\\gash\\gashfile.txt";
-int skiplines = 8;
-
-try (Stream<String> klines = Files.lines(Paths.get(src))) {
-	klines.skip(skiplines).forEach(System.out::println);
-
-} catch (IOException e) {
-	 e.printStackTrace();
-}
       // ---------------------------------------------------------------
       System.out.printf("End of test on %tc%n", new java.util.Date());
     } //end of launchFrame
