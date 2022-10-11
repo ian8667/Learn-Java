@@ -1,6 +1,8 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
 import java.util.function.Consumer;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -73,7 +75,7 @@ import java.util.function.Consumer;
  * https://www.w3schools.com/java/default.asp
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.24 2022-10-11T18:57:09
+ * @version (#)coreJava.java        4.25 2022-10-11T20:04:01
  */
 public class coreJava {
 private byte dummy;
@@ -94,27 +96,19 @@ private byte dummy;
     public void launchFrame() {
       System.out.printf("Start of test on %tc%n", new java.util.Date());
       // ---------------------------------------------------------------
-// Consumer example 1
-Consumer<String> printit = new Consumer<String>() {
-    @Override
-    public void accept(String dd) {
-
-      //dd = dd.toUpperCase();
-      System.out.println(dd);
-
-    }
-
-}; //end printit
-//Usage:
-String msg = "hello world from Consumer<String> printit";
-printit.accept(msg);
-
-
 // Consumer example 2
 Consumer<String> konsumer = (str) -> System.out.println(str);
 
-msg = "hello world from Consumer<String> konsumer";
+String msg = "hello world from Consumer<String> konsumer";
 konsumer.accept(msg);
+
+msg = "the quick brown iter";
+CharacterIterator iter = new StringCharacterIterator(msg);
+while (iter.current() != CharacterIterator.DONE ) {
+  msg = String.valueOf(iter.current());
+  konsumer.accept(msg);
+  iter.next();
+}
       // ---------------------------------------------------------------
       System.out.printf("End of test on %tc%n", new java.util.Date());
     } //end of launchFrame
