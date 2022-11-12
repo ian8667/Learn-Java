@@ -1,9 +1,11 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
 import java.util.function.Consumer;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
 /**
  * <p>A file to practice my Java as I go through the book
  * 'Core Java Volume 2 - Advanced Features'.</p>
@@ -75,7 +77,7 @@ import java.text.StringCharacterIterator;
  * https://www.w3schools.com/java/default.asp
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.25 2022-10-11T20:04:01
+ * @version (#)coreJava.java        4.28 2022-11-12T13:09:34
  */
 public class coreJava {
 private byte dummy;
@@ -102,13 +104,34 @@ Consumer<String> konsumer = (str) -> System.out.println(str);
 String msg = "hello world from Consumer<String> konsumer";
 konsumer.accept(msg);
 
-msg = "the quick brown iter";
-CharacterIterator iter = new StringCharacterIterator(msg);
-while (iter.current() != CharacterIterator.DONE ) {
-  msg = String.valueOf(iter.current());
-  konsumer.accept(msg);
-  iter.next();
+//The Health Lottery
+//For each line, choose five numbers between 1 and 50.
+//use java.security.SecureRandom as well?
+
+/*
+Section one
+*/
+System.out.println("ThreadLocalRandom - non stream");
+final ThreadLocalRandom rannum = ThreadLocalRandom.current();
+Set<Integer> myset = new LinkedHashSet<Integer>();
+int nexti = 0;
+int min = 1;
+int max = 50;
+int wanted = 5; //number of integers to draw
+while (myset.size() < wanted) {
+    nexti = rannum.nextInt(min, (max + 1));
+    myset.add(nexti);
 }
+System.out.println("Random numbers with no duplicates = "+myset.toString());
+
+
+/*
+Section two
+*/
+System.out.println();
+System.out.println("ThreadLocalRandom - with a stream");
+IntStream istream = rannum.ints(min, (max + 1));
+istream.distinct().limit(wanted).forEach(System.out::println);
       // ---------------------------------------------------------------
       System.out.printf("End of test on %tc%n", new java.util.Date());
     } //end of launchFrame
