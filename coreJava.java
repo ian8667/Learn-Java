@@ -1,15 +1,8 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
-import java.util.function.Consumer;
+import java.util.List;
+import java.util.ArrayList;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.IntStream;
-import java.nio.file.Path;
-import java.util.stream.Stream;
-import java.nio.file.Files;
-import java.io.IOException;
 
 /**
  * <p>A file to practice my Java as I go through the book
@@ -82,7 +75,7 @@ import java.io.IOException;
  * https://www.w3schools.com/java/default.asp
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.30 2022-11-22T14:04:18
+ * @version (#)coreJava.java        4.31 2022-12-01T18:35:27
  */
 
 /*
@@ -118,75 +111,27 @@ private byte dummy;
     public void launchFrame() {
       System.out.printf("Start of test on %tc%n", new java.util.Date());
       // ---------------------------------------------------------------
-// Consumer example 2
-Consumer<String> konsumer = (str) -> System.out.println(str);
 
-String msg = "hello world from Consumer<String> konsumer";
-konsumer.accept(msg);
+List<String> names = new ArrayList<String>();
 
-//The Health Lottery
-//For each line, choose five numbers between 1 and 50.
-//use java.security.SecureRandom as well?
+names.add("Trims");
+names.add("the");
+names.add("capacity");
+names.add("of");
+names.add("this");
+names.add("ArrayList");
+names.add("instance");
+names.add("to");
+names.add("be");
+names.add("the");
+names.add("lists");
+names.add("currentsize");
 
-/*
-Section one
-*/
-System.out.println("ThreadLocalRandom - non stream");
-final ThreadLocalRandom rannum = ThreadLocalRandom.current();
-Set<Integer> myset = new LinkedHashSet<Integer>();
-int nexti = 0;
-int min = 1;
-int max = 50;
-int wanted = 5; //number of integers to draw
-while (myset.size() < wanted) {
-    nexti = rannum.nextInt(min, (max + 1));
-    myset.add(nexti);
-}
-System.out.println("Random numbers with no duplicates = "+myset.toString());
+System.out.printf("the number of elements in this list: %d%n",names.size());
 
+long counter = names.stream().filter((str) -> str.length() == 2).count();
+System.out.printf("the number of elements with a length of two: %d%n", counter);
 
-/*
-Section two
-*/
-System.out.println();
-System.out.println("ThreadLocalRandom - with a stream");
-IntStream istream = rannum.ints(min, (max + 1));
-istream.distinct().limit(wanted).forEach(num -> System.out.printf("%1$02d%n",num));
-
-
-/*
-Section three
-*/
-System.out.println();
-System.out.println("Section three");
-String basepath = "C:\\Test\\TestFiles";
-String filename = "x.x"; //Wrecks.txt
-Path mypath = Path.of(basepath, filename);
-System.out.printf("Path to file: %s%n", mypath.toString());
-long counter = 0L;
-
-/*
-The returned object is a stream containing a reference to an open
-file. The file is closed by the exit of this try-catch block and
-thus closing the stream. The file contents should not be modified
-during the execution of the terminal stream operation. Otherwise,
-the result of the terminal stream operation is undefined.
-*/
-try (Stream<String> fileStream = Files.lines(mypath)) {
-    counter = fileStream.count();
-} catch(Exception e) {
-  e.printStackTrace();
-}
-System.out.printf("%d lines in file%n", counter);
-
-
-/*
-Section four
-*/
-System.out.println();
-System.out.println("Section four");
-int fred = 4;
-System.out.printf("fred is now: %1$02d%n", fred);
 
       // ---------------------------------------------------------------
       System.out.printf("End of test on %tc%n", new java.util.Date());
