@@ -1,7 +1,7 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
-import java.util.List;
-import java.util.ArrayList;
+import java.awt.print.PrinterJob;
+import javax.print.PrintService;
 
 
 /**
@@ -75,23 +75,9 @@ import java.util.ArrayList;
  * https://www.w3schools.com/java/default.asp
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.31 2022-12-01T18:35:27
+ * @version (#)coreJava.java        4.32 2022-12-01T19:28:51
  */
 
-/*
-new work:
-opening files with a characterset
-
-StandardCharsets.US-ASCII
-StandardCharsets.UTF-8
-static Charset forName(String charsetName)
-java.nio.charset.StandardCharsets
-Charset charsetx = Charset.forName("US-ASCII");
-LotteryDrawing var1 = new LotteryDrawing();
-var1.getNumbers();
-SecureRandom.getInstance("SHA1PRNG");
-
-*/
 public class coreJava {
 private byte dummy;
   /**
@@ -111,27 +97,14 @@ private byte dummy;
     public void launchFrame() {
       System.out.printf("Start of test on %tc%n", new java.util.Date());
       // ---------------------------------------------------------------
+System.out.println();
+PrintService[] svcs = PrinterJob.lookupPrintServices();
+System.out.printf("Length of PrintService[] array: %d%n%n", svcs.length);
 
-List<String> names = new ArrayList<String>();
-
-names.add("Trims");
-names.add("the");
-names.add("capacity");
-names.add("of");
-names.add("this");
-names.add("ArrayList");
-names.add("instance");
-names.add("to");
-names.add("be");
-names.add("the");
-names.add("lists");
-names.add("currentsize");
-
-System.out.printf("the number of elements in this list: %d%n",names.size());
-
-long counter = names.stream().filter((str) -> str.length() == 2).count();
-System.out.printf("the number of elements with a length of two: %d%n", counter);
-
+for (int index=0; index<svcs.length; index++) {
+  System.out.println(svcs[index].getName());
+}
+System.out.println();
 
       // ---------------------------------------------------------------
       System.out.printf("End of test on %tc%n", new java.util.Date());
