@@ -6,6 +6,11 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
+import java.nio.file.Path;
+import java.util.stream.Stream;
+import java.nio.file.Files;
+import java.io.IOException;
+
 /**
  * <p>A file to practice my Java as I go through the book
  * 'Core Java Volume 2 - Advanced Features'.</p>
@@ -77,8 +82,23 @@ import java.util.stream.IntStream;
  * https://www.w3schools.com/java/default.asp
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.28 2022-11-12T13:09:34
+ * @version (#)coreJava.java        4.30 2022-11-22T14:04:18
  */
+
+/*
+new work:
+opening files with a characterset
+
+StandardCharsets.US-ASCII
+StandardCharsets.UTF-8
+static Charset forName(String charsetName)
+java.nio.charset.StandardCharsets
+Charset charsetx = Charset.forName("US-ASCII");
+LotteryDrawing var1 = new LotteryDrawing();
+var1.getNumbers();
+SecureRandom.getInstance("SHA1PRNG");
+
+*/
 public class coreJava {
 private byte dummy;
   /**
@@ -92,7 +112,7 @@ private byte dummy;
     /**
      * Working test method.
      * Floating point formatting to decimal places: %.2f
-     * A format of %03d will pad, for example, a 7 to 007.
+     * A format of %07d will pad, for example, a 7 to 007.
      * topLevel.setLocationRelativeTo(null);
      */
     public void launchFrame() {
@@ -131,7 +151,43 @@ Section two
 System.out.println();
 System.out.println("ThreadLocalRandom - with a stream");
 IntStream istream = rannum.ints(min, (max + 1));
-istream.distinct().limit(wanted).forEach(System.out::println);
+istream.distinct().limit(wanted).forEach(num -> System.out.printf("%1$02d%n",num));
+
+
+/*
+Section three
+*/
+System.out.println();
+System.out.println("Section three");
+String basepath = "C:\\Test\\TestFiles";
+String filename = "x.x"; //Wrecks.txt
+Path mypath = Path.of(basepath, filename);
+System.out.printf("Path to file: %s%n", mypath.toString());
+long counter = 0L;
+
+/*
+The returned object is a stream containing a reference to an open
+file. The file is closed by the exit of this try-catch block and
+thus closing the stream. The file contents should not be modified
+during the execution of the terminal stream operation. Otherwise,
+the result of the terminal stream operation is undefined.
+*/
+try (Stream<String> fileStream = Files.lines(mypath)) {
+    counter = fileStream.count();
+} catch(Exception e) {
+  e.printStackTrace();
+}
+System.out.printf("%d lines in file%n", counter);
+
+
+/*
+Section four
+*/
+System.out.println();
+System.out.println("Section four");
+int fred = 4;
+System.out.printf("fred is now: %1$02d%n", fred);
+
       // ---------------------------------------------------------------
       System.out.printf("End of test on %tc%n", new java.util.Date());
     } //end of launchFrame
