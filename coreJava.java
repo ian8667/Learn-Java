@@ -1,9 +1,10 @@
 // Copyright (c) 2002 MyHouse
 //package ian;
-import java.awt.print.PrinterJob;
-import javax.print.PrintService;
-
-
+import java.nio.file.Path;
+import java.util.stream.Stream;
+import java.nio.file.Files;
+import java.nio.charset.Charset;
+import java.io.IOException;
 /**
  * <p>A file to practice my Java as I go through the book
  * 'Core Java Volume 2 - Advanced Features'.</p>
@@ -46,13 +47,16 @@ import javax.print.PrintService;
  * String md5Result = String.format("%032x%n", new BigInteger(1, myBytes));
  * String md5Result = new BigInteger(1, md5.digest()).toString(16);
  *
+ * Package java.time
+ * ChronoUnit.DAYS.between(firstDate, secondDate);
+ *
  * Documentation:
  *
- * JDK 19 Documentation
- * https://docs.oracle.com/en/java/javase/19/
+ * JDK 20 Documentation
+ * https://docs.oracle.com/en/java/javase/20/
  *
- * Java SE Version 19 API docs
- * https://docs.oracle.com/en/java/javase/19/docs/api/index.html
+ * Java SE Version 20 API docs
+ * https://docs.oracle.com/en/java/javase/20/docs/api/java.base/module-summary.html
  *
  * The Java Tutorials
  * https://docs.oracle.com/javase/tutorial/
@@ -75,7 +79,7 @@ import javax.print.PrintService;
  * https://www.w3schools.com/java/default.asp
  *
  * @author Ian Molloy April 2001
- * @version (#)coreJava.java        4.32 2022-12-01T19:28:51
+ * @version (#)coreJava.java        4.35 2023-03-29T16:45:25
  */
 
 public class coreJava {
@@ -98,12 +102,21 @@ private byte dummy;
       System.out.printf("Start of test on %tc%n", new java.util.Date());
       // ---------------------------------------------------------------
 System.out.println();
-PrintService[] svcs = PrinterJob.lookupPrintServices();
-System.out.printf("Length of PrintService[] array: %d%n%n", svcs.length);
 
-for (int index=0; index<svcs.length; index++) {
-  System.out.println(svcs[index].getName());
+String inputfile = "C:\\Test\\TestFiles\\Wrecks.txt";
+Path mypath = Path.of(inputfile);
+Charset cs = Charset.forName("UTF-8");
+long lineCounter = 0L;
+
+try (Stream<String> mylines = Files.lines(mypath, cs)) {
+    lineCounter = mylines.count();
+} catch (IOException e) {
+    e.printStackTrace();
 }
+
+
+System.out.printf("Line count for file [%s]%n", inputfile);
+System.out.printf("Line count is now: %d%n", lineCounter);
 System.out.println();
 
       // ---------------------------------------------------------------
